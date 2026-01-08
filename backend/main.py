@@ -7,8 +7,8 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 import os
 
-from database import engine, get_db, Base, SessionLocal
-from models import Instrument, Order, Trade, Portfolio, User
+from .database import engine, get_db, Base, SessionLocal
+from .models import Instrument, Order, Trade, Portfolio, User
 
 # Create database tables
 Base.metadata.create_all(bind=engine)

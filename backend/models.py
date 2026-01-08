@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Enum
 from datetime import datetime
-from database import Base
+from .database import Base
 import enum
 
 # User Model
