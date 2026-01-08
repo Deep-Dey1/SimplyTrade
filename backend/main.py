@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, Header
+from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List, Optional
@@ -14,6 +15,9 @@ from .models import Instrument, Order, Trade, Portfolio, User
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SimplyTrade API", version="1.0.0")
+
+# Create API router
+api_router = APIRouter(prefix="/api/v1")
 
 # CORS middleware for frontend
 app.add_middleware(
@@ -108,7 +112,7 @@ def read_root():
     return {"message": "SimplyTrade API - Trading Platform Backend"}
 
 # AUTH APIs
-@app.post("/api/v1/auth/register", response_model=UserResponse, status_code=201)
+@api_router.post("/auth/register", response_model=UserResponse, status_code=201)
 def register_user(user_request: UserRegisterRequest, db: Session = Depends(get_db)):
     """Register a new user"""
     
@@ -130,7 +134,7 @@ def register_user(user_request: UserRegisterRequest, db: Session = Depends(get_d
     
     return new_user
 
-@app.post("/api/v1/auth/login", response_model=UserResponse)
+@api_router.post("/auth/login", response_model=UserResponse)
 def login_user(login_request: UserLoginRequest, db: Session = Depends(get_db)):
     """Login user"""
     
@@ -146,13 +150,13 @@ def login_user(login_request: UserLoginRequest, db: Session = Depends(get_db)):
     return user
 
 # 1. INSTRUMENT APIs
-@app.get("/api/v1/instruments", response_model=List[InstrumentResponse])
+@api_router.get("/instruments", response_model=List[InstrumentResponse])
 def get_instruments(db: Session = Depends(get_db)):
     """Fetch list of tradable instruments"""
     instruments = db.query(Instrument).all()
     return instruments
 
-@app.get("/api/v1/instruments/{symbol}", response_model=InstrumentResponse)
+@api_router.get("/instruments/{symbol}", response_model=InstrumentResponse)
 def get_instrument(symbol: str, db: Session = Depends(get_db)):
     """Fetch specific instrument by symbol"""
     instrument = db.query(Instrument).filter(Instrument.symbol == symbol).first()
@@ -161,7 +165,7 @@ def get_instrument(symbol: str, db: Session = Depends(get_db)):
     return instrument
 
 # 2. ORDER MANAGEMENT APIs
-@app.post("/api/v1/orders", response_model=OrderResponse, status_code=201)
+@api_router.post("/orders", response_model=OrderResponse, status_code=201)
 def place_order(order_request: OrderRequest, db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     """Place a new order"""
     
@@ -203,7 +207,7 @@ def place_order(order_request: OrderRequest, db: Session = Depends(get_db), user
     db.refresh(new_order)
     return new_order
 
-@app.get("/api/v1/orders/{order_id}", response_model=OrderResponse)
+@api_router.get("/orders/{order_id}", response_model=OrderResponse)
 def get_order_status(order_id: int, db: Session = Depends(get_db)):
     """Fetch order status by order ID"""
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -211,21 +215,21 @@ def get_order_status(order_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Order not found")
     return order
 
-@app.get("/api/v1/orders", response_model=List[OrderResponse])
+@api_router.get("/orders", response_model=List[OrderResponse])
 def get_all_orders(db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     """Fetch all orders for the user"""
     orders = db.query(Order).filter(Order.user_id == user_id).order_by(Order.created_at.desc()).all()
     return orders
 
 # 3. TRADE APIs
-@app.get("/api/v1/trades", response_model=List[TradeResponse])
+@api_router.get("/trades", response_model=List[TradeResponse])
 def get_trades(db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     """Fetch list of executed trades"""
     trades = db.query(Trade).filter(Trade.user_id == user_id).order_by(Trade.executed_at.desc()).all()
     return trades
 
 # 4. PORTFOLIO APIs
-@app.get("/api/v1/portfolio", response_model=List[PortfolioResponse])
+@api_router.get("/portfolio", response_model=List[PortfolioResponse])
 def get_portfolio(db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     """Fetch current portfolio holdings"""
     portfolio_items = db.query(Portfolio).filter(Portfolio.user_id == user_id, Portfolio.quantity > 0).all()
@@ -327,8 +331,11 @@ def startup_event():
     
     db.close()
 
-# Mount static files (frontend) at the END - after all API routes
-# This must come last so API routes are checked first
+# Include API router BEFORE mounting static files
+app.include_router(api_router)
+
+# Mount static files (frontend) - this comes after API routes are registered
+# Static files will only be served if no API route matches
 public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
 if os.path.exists(public_dir):
     app.mount("/", StaticFiles(directory=public_dir, html=True), name="static")
