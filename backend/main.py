@@ -1,9 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
+import os
 
 from database import engine, get_db, Base, SessionLocal
 from models import Instrument, Order, Trade, Portfolio, User
@@ -12,6 +14,11 @@ from models import Instrument, Order, Trade, Portfolio, User
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SimplyTrade API", version="1.0.0")
+
+# Mount static files (frontend) - only if public directory exists
+public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
+if os.path.exists(public_dir):
+    app.mount("/", StaticFiles(directory=public_dir, html=True), name="static")
 
 # CORS middleware for frontend
 app.add_middleware(

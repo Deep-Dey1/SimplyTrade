@@ -3,9 +3,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-# SQLite database URL - Use /tmp for serverless environments like Vercel
-# Note: Data in /tmp is ephemeral and will be cleared between deployments
-db_path = "/tmp/trading.db" if os.environ.get("VERCEL") else "./trading.db"
+# SQLite database URL
+# For Render: Store in persistent disk at /opt/render/project/src
+db_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(db_dir, "trading.db")
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_path}"
 
 # Create engine
