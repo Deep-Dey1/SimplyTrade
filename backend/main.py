@@ -107,10 +107,6 @@ class PortfolioResponse(BaseModel):
     current_value: float
 
 # Root endpoint
-@app.get("/")
-def read_root():
-    return {"message": "SimplyTrade API - Trading Platform Backend"}
-
 # AUTH APIs
 @api_router.post("/auth/register", response_model=UserResponse, status_code=201)
 def register_user(user_request: UserRegisterRequest, db: Session = Depends(get_db)):
@@ -335,10 +331,28 @@ def startup_event():
 app.include_router(api_router)
 
 # Mount static files (frontend) - this comes after API routes are registered
-# Static files will only be served if no API route matches
-public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
-if os.path.exists(public_dir):
+# Try multiple possible paths for the public directory
+public_dir = None
+possible_paths = [
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), "public"),
+    os.path.join(os.getcwd(), "public"),
+    "/opt/render/project/src/public"
+]
+
+for path in possible_paths:
+    if os.path.exists(path):
+        public_dir = path
+        print(f"Found public directory at: {public_dir}")
+        break
+
+if public_dir:
     app.mount("/", StaticFiles(directory=public_dir, html=True), name="static")
+else:
+    print("Warning: public directory not found")
+    # Add a fallback root route
+    @app.get("/")
+    def root():
+        return {"message": "SimplyTrade API - Frontend files not found. API is available at /api/v1/"}
 
 if __name__ == "__main__":
     import uvicorn
