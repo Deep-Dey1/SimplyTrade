@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplyTrade - Trading Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#e6f2ff,transparent)]"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>📈 SimplyTrade</h1>
+                    <p>Your Simple Trading Platform</p>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                    <div class="user-info" onclick="window.location.href='profile.html'" style="cursor: pointer;">
+                        <span class="user-icon">👤</span>
+                        <span class="user-name" id="user-name">User</span>
+                    </div>
+                    <button onclick="handleLogout()" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Column - Instruments -->
+            <div class="left-column">
+                <section class="card">
+                    <h2>Available Instruments</h2>
+                    <div class="table-container">
+                        <table id="instruments-table">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Exchange</th>
+                                    <th>Type</th>
+                                    <th>Last Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="instruments-body">
+                                <tr><td colspan="5" class="loading">Loading instruments...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column - Order Form and Portfolio -->
+            <div class="right-column">
+                <!-- Place Order Section -->
+                <section class="card">
+                    <h2>Place Order</h2>
+                    <form id="order-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="symbol">Symbol</label>
+                                <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="order-type">Order Type</label>
+                                <select id="order-type" name="order_type" required>
+                                    <option value="BUY">BUY</option>
+                                    <option value="SELL">SELL</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="order-style">Order Style</label>
+                                <select id="order-style" name="order_style" required>
+                                    <option value="MARKET">MARKET</option>
+                                    <option value="LIMIT">LIMIT</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" id="quantity" name="quantity" min="1" placeholder="e.g., 10" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price">Price (For LIMIT orders)</label>
+                                <input type="number" id="price" name="price" step="0.01" placeholder="e.g., 150.00">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Place Order</button>
+                    </form>
+                    <div id="order-message" class="message"></div>
+                </section>
+
+                <!-- Portfolio Section -->
+                <section class="card">
+                    <h2>Portfolio</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Quantity</th>
+                                    <th>Avg Price</th>
+                                    <th>Current Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolio-body">
+                                <tr><td colspan="4" class="loading">No holdings yet</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Bottom Section - Orders and Trades -->
+        <div class="bottom-section">
+            <!-- My Orders -->
+            <section class="card">
+                <h2>My Orders</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Style</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-body">
+                            <tr><td colspan="8" class="loading">No orders yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- My Trades -->
+            <section class="card">
+                <h2>My Trades</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trade ID</th>
+                                <th>Order ID</th>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Executed At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-body">
+                            <tr><td colspan="7" class="loading">No trades yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>SimplyTrade © 2026 | Built with FastAPI & Vanilla JS</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

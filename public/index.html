@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplyTrade - Welcome</title>
+    <link rel="stylesheet" href="landing-styles.css">
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#e6f2ff,transparent)]"></div>
+    </div>
+    
+    <div class="landing-container">
+        <div class="unified-card">
+            <!-- Left Side - About/Welcome Message -->
+            <div class="left-section">
+                <div class="welcome-content">
+                    <h1>📈 SimplyTrade</h1>
+                    <p class="tagline">Your Gateway to Smart Trading</p>
+                    
+                    <div class="features">
+                        <h2>Why Choose SimplyTrade?</h2>
+                        <ul>
+                            <li>
+                                <span class="feature-icon">📊</span>
+                                <div>
+                                    <strong>Real-Time Trading</strong>
+                                    <p>Execute market and limit orders instantly</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="feature-icon">💼</span>
+                                <div>
+                                    <strong>Portfolio Management</strong>
+                                    <p>Track your holdings and performance</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="feature-icon">📈</span>
+                                <div>
+                                    <strong>Multi-Exchange Support</strong>
+                                    <p>Trade across NASDAQ and NSE</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="feature-icon">🔒</span>
+                                <div>
+                                    <strong>Secure & Simple</strong>
+                                    <p>Clean interface, powerful features</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h3>10+</h3>
+                            <p>Instruments</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>2</h3>
+                            <p>Exchanges</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>24/7</h3>
+                            <p>Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Login/Register Forms -->
+            <div class="right-section">
+                <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-form="login">Login</button>
+                    <button class="auth-tab" data-form="register">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form active">
+                    <h2>Welcome Back</h2>
+                    <p class="form-subtitle">Login to continue trading</p>
+                    
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" placeholder="Enter your password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Login</button>
+                    </form>
+                    
+                    <div id="login-message" class="message"></div>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form" class="auth-form">
+                    <h2>Create Account</h2>
+                    <p class="form-subtitle">Start your trading journey</p>
+                    
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" placeholder="Create a password" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-confirm">Confirm Password</label>
+                            <input type="password" id="register-confirm" placeholder="Confirm your password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Create Account</button>
+                    </form>
+                    
+                    <div id="register-message" class="message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="landing-script.js"></script>
+</body>
+</html>
