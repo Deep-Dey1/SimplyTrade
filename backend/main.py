@@ -15,11 +15,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SimplyTrade API", version="1.0.0")
 
-# Mount static files (frontend) - only if public directory exists
-public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
-if os.path.exists(public_dir):
-    app.mount("/", StaticFiles(directory=public_dir, html=True), name="static")
-
 # CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
@@ -331,6 +326,12 @@ def startup_event():
         db.commit()
     
     db.close()
+
+# Mount static files (frontend) at the END - after all API routes
+# This must come last so API routes are checked first
+public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
+if os.path.exists(public_dir):
+    app.mount("/", StaticFiles(directory=public_dir, html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
