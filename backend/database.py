@@ -1,9 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-# SQLite database URL
-SQLALCHEMY_DATABASE_URL = "sqlite:///./trading.db"
+# SQLite database URL - Use /tmp for serverless environments like Vercel
+# Note: Data in /tmp is ephemeral and will be cleared between deployments
+db_path = "/tmp/trading.db" if os.environ.get("VERCEL") else "./trading.db"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_path}"
 
 # Create engine
 engine = create_engine(
