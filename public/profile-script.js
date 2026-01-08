@@ -223,5 +223,5 @@ function handleLogout() {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId');
-    window.location.href = 'landing.html';
+    window.location.href = 'index.html';
 }
