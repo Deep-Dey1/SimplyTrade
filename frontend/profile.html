@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplyTrade - My Profile</title>
+    <link rel="stylesheet" href="profile-styles.css">
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#e6f2ff,transparent)]"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>📈 SimplyTrade</h1>
+                    <p>Your Simple Trading Platform</p>
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button onclick="window.location.href='index.html'" class="btn-back">← Back to Trading</button>
+                    <button onclick="handleLogout()" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Profile Header -->
+        <section class="profile-header card">
+            <div class="profile-info">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-details">
+                    <h2 id="profile-name">User Name</h2>
+                    <p id="profile-email">user@example.com</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs Section -->
+        <section class="card">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="portfolio">Portfolio</button>
+                <button class="tab-btn" data-tab="orders">My Orders</button>
+                <button class="tab-btn" data-tab="trades">My Trades</button>
+            </div>
+
+            <!-- Portfolio Tab -->
+            <div id="portfolio" class="tab-content active">
+                <h3>My Holdings</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Quantity</th>
+                                <th>Average Price</th>
+                                <th>Current Value</th>
+                                <th>P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolio-body">
+                            <tr><td colspan="5" class="loading">Loading portfolio...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <h3>Order History</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Style</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-body">
+                            <tr><td colspan="8" class="loading">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Trades Tab -->
+            <div id="trades" class="tab-content">
+                <h3>Executed Trades</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trade ID</th>
+                                <th>Order ID</th>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Executed At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-body">
+                            <tr><td colspan="7" class="loading">Loading trades...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>SimplyTrade © 2026 | Built with FastAPI & Vanilla JS</p>
+        </footer>
+    </div>
+
+    <script src="profile-script.js"></script>
+</body>
+</html>
