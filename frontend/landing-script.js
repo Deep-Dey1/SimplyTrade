@@ -95,19 +95,19 @@ async function handleRegister(event) {
             throw new Error(data.detail || 'Registration failed');
         }
         
-        // Store user data
-        localStorage.setItem('userId', data.id);
-        localStorage.setItem('userName', data.name);
-        localStorage.setItem('userEmail', data.email);
-        localStorage.setItem('isLoggedIn', 'true');
+        // Show success message and prompt to login
+        showMessage('register', 'success', 'Account created successfully! Please login to continue.');
         
-        // Show success message
-        showMessage('register', 'success', 'Account created successfully! Redirecting...');
+        // Clear the registration form
+        document.getElementById('register-name').value = '';
+        document.getElementById('register-email').value = '';
+        document.getElementById('register-password').value = '';
+        document.getElementById('register-confirm').value = '';
         
-        // Redirect to dashboard after 1 second
+        // Switch to login tab after 2 seconds
         setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1000);
+            switchForm('login');
+        }, 2000);
         
     } catch (error) {
         showMessage('register', 'error', error.message || 'Registration failed. Please try again.');
