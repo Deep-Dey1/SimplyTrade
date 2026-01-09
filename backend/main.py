@@ -259,6 +259,42 @@ def get_portfolio(db: Session = Depends(get_db), user_id: str = Depends(get_curr
     
     return result
 
+# 5. ADMIN APIs - Database Viewing
+@api_router.get("/admin/users")
+def get_all_users(db: Session = Depends(get_db)):
+    """Admin: View all registered users"""
+    users = db.query(User).all()
+    return [{
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "created_at": user.created_at if hasattr(user, 'created_at') else None
+    } for user in users]
+
+@api_router.get("/admin/all-orders")
+def get_all_orders_admin(db: Session = Depends(get_db)):
+    """Admin: View all orders from all users"""
+    orders = db.query(Order).order_by(Order.created_at.desc()).all()
+    return orders
+
+@api_router.get("/admin/all-trades")
+def get_all_trades_admin(db: Session = Depends(get_db)):
+    """Admin: View all trades from all users"""
+    trades = db.query(Trade).order_by(Trade.executed_at.desc()).all()
+    return trades
+
+@api_router.get("/admin/all-portfolios")
+def get_all_portfolios_admin(db: Session = Depends(get_db)):
+    """Admin: View all portfolio holdings"""
+    portfolios = db.query(Portfolio).filter(Portfolio.quantity > 0).all()
+    return [{
+        "user_id": p.user_id,
+        "symbol": p.symbol,
+        "quantity": p.quantity,
+        "average_price": p.average_price,
+        "total_investment": p.quantity * p.average_price
+    } for p in portfolios]
+
 # Helper function to execute orders
 def execute_order(order_id: int, db: Session):
     """Simulate order execution"""
