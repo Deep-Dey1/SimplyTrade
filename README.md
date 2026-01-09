@@ -6,6 +6,15 @@ A modern, intuitive trading platform built with FastAPI and vanilla JavaScript, 
 
 SimplyTrade is a full-stack web application that provides a streamlined trading experience with real-time order execution, portfolio management, and comprehensive trade tracking. The platform supports both market and limit orders, enabling users to execute trades efficiently while maintaining a clear view of their positions and performance.
 
+### Landing Page and User Authentication
+![Landing Page and User Authentication](demo/1.png)
+
+### Trading Dashboard
+![Trading Dashboard](demo/2.png)
+
+### User Portfolio and Trading History
+![User Portfolio and Trading History](demo/3.png)
+
 ## Features
 
 ### Core Trading Functionality
