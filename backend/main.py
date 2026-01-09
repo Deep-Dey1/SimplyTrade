@@ -181,6 +181,20 @@ def place_order(order_request: OrderRequest, db: Session = Depends(get_db), user
     if order_request.order_style not in ["MARKET", "LIMIT"]:
         raise HTTPException(status_code=400, detail="Order style must be MARKET or LIMIT")
     
+    # Validation: Check if user has sufficient quantity for SELL orders
+    if order_request.order_type == "SELL":
+        portfolio_item = db.query(Portfolio).filter(
+            Portfolio.user_id == user_id, 
+            Portfolio.symbol == order_request.symbol
+        ).first()
+        
+        if not portfolio_item or portfolio_item.quantity < order_request.quantity:
+            available_qty = portfolio_item.quantity if portfolio_item else 0
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Insufficient quantity to sell. You have {available_qty} shares of {order_request.symbol}, but trying to sell {order_request.quantity}"
+            )
+    
     # Create order
     new_order = Order(
         user_id=user_id,
@@ -293,7 +307,9 @@ def execute_order(order_id: int, db: Session):
     elif order.order_type == "SELL":
         if portfolio_item and portfolio_item.quantity >= order.quantity:
             portfolio_item.quantity -= order.quantity
-        # Note: In a real system, you'd check if user has enough quantity to sell
+        else:
+            # This should not happen due to validation in place_order, but keeping as safety check
+            raise HTTPException(status_code=400, detail="Insufficient quantity to sell")
     
     # Update order status
     order.status = "EXECUTED"
